@@ -1,0 +1,1066 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Desafios Eróticos</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e1217;--card:#2f3a48;--accent:#ff6f6f;--muted:#9aa3b0;--white:#fff}
+*{box-sizing:border-box}html,body{height:100%;margin:0;background:var(--bg);font-family:Montserrat,Arial,sans-serif;color:var(--white)}
+.app{max-width:480px;margin:0 auto;padding:12px 16px 110px;min-height:100vh}
+header{display:flex;align-items:center;gap:12px;padding:12px 8px;background:#3d4653;border-radius:8px;margin-bottom:8px}
+.title{font-family:'Pacifico',cursive;text-align:center;color:var(--white);font-size:42px;margin-top:26px;margin-bottom:10px}
+.main-buttons{display:flex;flex-direction:column;gap:12px;align-items:center;margin-top:14px}
+
+/* wrappers for vertical centering */
+.home-buttons-wrap{display:flex;flex-direction:column;justify-content:center;min-height:calc(100vh - 280px)}
+.config-buttons-wrap{display:flex;flex-direction:column;justify-content:center;min-height:calc(100vh - 200px)}
+
+.btn{background:var(--accent);color:white;padding:16px 28px;border-radius:28px;border:none;font-size:18px;min-width:220px;cursor:pointer;box-shadow:0 6px 0 rgba(0,0,0,0.25)}
+.btn.ghost{background:transparent;border:2px solid rgba(255,255,255,0.12);color:var(--white)}
+.screen{display:none}.screen.active{display:block}
+.muted{color:var(--muted);font-size:13px}
+.card{background:var(--card);padding:12px;border-radius:12px;display:flex;align-items:center;justify-content:space-between;margin-top:12px;color:var(--white)}
+.card.clickable{cursor:pointer}
+.small{font-size:14px;padding:8px 12px;border-radius:10px}
+.list{display:flex;flex-direction:column;gap:12px}
+.form-row{display:flex;flex-direction:column;gap:8px}
+input[type=text],select,textarea{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px;border-radius:8px;color:var(--white)}
+footer{position:fixed;left:0;bottom:0;width:100%;padding:12px 0;text-align:center;color:var(--muted);font-size:13px;background:transparent}
+.result{margin-top:20px;padding:18px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.02));text-align:center}
+.result h2{margin:6px 0;font-size:20px}
+.result p{margin:6px 0;color:var(--muted)}
+.controls-bottom{display:flex;gap:8px;justify-content:center;margin-top:12px}
+.badge{background:rgba(255,255,255,0.04);padding:6px 10px;border-radius:8px}
+.switch{width:48px;height:28px;border-radius:20px;background:#b45a5a;position:relative;flex:0 0 48px}
+.switch.off{background:rgba(255,255,255,0.16)}
+.switch .knob{position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:white;transition:all .15s}
+.switch.on .knob{left:23px}
+@media(min-width:520px){.app{margin-top:20px}}
+
+/* modal close X style */
+.modal-close-x{
+  position:absolute;right:10px;top:8px;background:transparent;border:0;color:var(--muted);font-size:18px;cursor:pointer;padding:6px;border-radius:6px;
+}
+.modal-close-x:hover{color:var(--white);background:rgba(255,255,255,0.04)}
+
+/* fade utilities: tempo ajustado para 0.5s conforme solicitado */
+.fade { transition: opacity .5s ease; opacity:1; }
+.hidden { opacity:0; pointer-events:none; }
+
+/* center */
+.center-wrap{display:flex;justify-content:center}
+.sort-button-large{background:var(--accent);Color:white;padding:12px 36px;border-radius:16px;border:none;font-size:18px;cursor:pointer;box-shadow:0 6px 0 rgba(0,0,0,0.2)}
+
+/* result card layout */
+.result-card{max-width:420px;margin:20px auto;padding:22px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));text-align:center}
+.result-actor{font-weight:700;font-size:22px;margin-bottom:8px}
+.result-text{color:var(--muted);margin-bottom:12px}
+
+/* players */
+.players-container{display:flex;flex-direction:column;gap:12px}
+.players-list-wrap{flex:1;min-height:120px}
+.btn-play-duplicate{min-width:220px;padding:16px 28px;border-radius:28px;font-size:18px}
+
+/* challenges list row: card look */
+.challenge-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px; border-radius:10px; background:var(--card); color:var(--white) }
+.challenge-text { font-weight:700; color:var(--white) }
+
+/* modal action buttons aligned right (edit card) */
+.modal-actions-right { display:flex; gap:8px; justify-content:flex-end; align-items:center; margin-top:10px; }
+
+/* select white style: agora com fundo branco e texto preto (solicitado) */
+.select-white{background:#ffffff;color:#000000;border-radius:6px;padding:8px;border:1px solid rgba(0,0,0,0.12)}
+.insert-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;color:var(--white);cursor:pointer;font-size:13px}
+.danger{background:#8b2f2f;border:0;color:white;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:13px}
+.btn-primary-small{background:var(--accent);color:#ffffff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:14px}
+
+/* icon buttons */
+.icon-btn{background:transparent;border:0;color:var(--white);cursor:pointer;padding:6px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center}
+.icon-btn:hover{background:rgba(255,255,255,0.03)}
+
+/* RESULT area centering */
+#resultArea{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 220px)}
+
+/* COUNTDOWN overlay + number */
+/* agora com fundo liso (cor da raiz), cobrindo toda a tela */
+#countdownOverlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;pointer-events:none;z-index:3000;background:var(--bg)}
+.count-number{font-size:120px;font-weight:800;color:var(--white);opacity:0;display:flex;align-items:center;justify-content:center}
+@keyframes pulseScale {
+  0%{transform:scale(0.8);opacity:0}
+  20%{transform:scale(1.05);opacity:1}
+  60%{transform:scale(0.95);opacity:1}
+  100%{transform:scale(0.6);opacity:0}
+}
+.count-number.pulse { animation: pulseScale 1s ease-in-out forwards; }
+@media(max-width:420px){ .count-number{font-size:84px} }
+
+/* WHEN countdown active: hide all app content (texts, icons, buttons, modals...) to leave only numbers on a plain background */
+.countdown-active .app { visibility: hidden !important; pointer-events: none !important; }
+.countdown-active #overlay,
+.countdown-active #modal { display: none !important; }
+.countdown-active .count-number { visibility: visible; }
+
+/* Next level bar fixed above footer (initially hidden; shown only on play screen via JS) */
+.next-level-bar{position:fixed;left:0;right:0;bottom:44px;padding:8px 16px;display:none;justify-content:center;z-index:2000}
+.next-level-btn{background:#222831;color:white;padding:12px 20px;border-radius:12px;border:2px solid rgba(255,255,255,0.06);cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,0.2)}
+.next-level-btn:disabled{opacity:0.4;cursor:not-allowed}
+.category-pill{display:inline-block;background:rgba(255,255,255,0.04);padding:6px 10px;border-radius:999px;margin-bottom:8px;color:var(--muted);font-weight:700}
+.weight-badge{background:rgba(255,255,255,0.06);padding:4px 8px;border-radius:8px;font-size:12px;margin-left:8px}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <button id="btnBack" class="small" style="display:none" aria-label="Voltar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M15 18L9 12L15 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <h1 id="headerTitle"></h1>
+  </header>
+
+  <!-- HOME -->
+  <div id="screenHome" class="screen active">
+    <div class="title">Desafios Eróticos</div>
+    <div class="home-buttons-wrap">
+      <div class="main-buttons" style="align-items:center">
+        <button id="btnPlay" class="btn">Jogar</button>
+        <button id="btnConfig" class="btn ghost">Configurações</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLAY -->
+  <div id="screenPlay" class="screen" aria-hidden="true">
+    <div style="text-align:center;margin-top:8px">
+      <span class="category-pill" id="currentCategoryPill">—</span>
+    </div>
+    <div id="resultArea" class="fade hidden" aria-hidden="true">
+      <div class="result-card">
+        <div class="result-actor" id="resultActor">—</div>
+        <div class="result-text" id="resultChallenge">—</div>
+        <div>
+          <button id="btnAgain" class="sort-button-large">Próximo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIG -->
+  <div id="screenConfig" class="screen" aria-hidden="true">
+    <div class="config-buttons-wrap">
+      <div style="display:flex;flex-direction:column;gap:12px;align-items:center;margin-top:6px">
+        <button id="cfg_players" class="btn ghost" style="min-width:220px;padding:12px 20px;">Jogadores</button>
+        <button id="cfg_challenges" class="btn ghost" style="min-width:220px;padding:12px 20px;">Desafios</button>
+        <button id="cfg_export" class="btn ghost" style="min-width:220px;padding:12px 20px;">Exportar</button>
+        <button id="cfg_import" class="btn ghost" style="min-width:220px;padding:12px 20px;">Importar</button>
+        <button id="cfg_reset" class="btn ghost" style="min-width:220px;padding:12px 20px;">Resetar configurações</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLAYERS -->
+  <div id="screenPlayers" class="screen" aria-hidden="true">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h2>Jogadores</h2>
+      <button id="addPlayerBtn" class="small">+ Jogador</button>
+    </div>
+    <div class="players-container">
+      <div id="playersList" class="list players-list-wrap"></div>
+      <div style="display:flex;justify-content:center;margin-top:4px">
+        <button id="btnPlayFromPlayers" class="btn btn-play-duplicate">Jogar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHALLENGES -->
+  <div id="screenChallenges" class="screen" aria-hidden="true">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h2>Desafios</h2>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="importChallengesBtn" class="small" title="Importar CSV">Importar</button>
+        <button id="addChallengeBtn" class="small">+ Desafio</button>
+      </div>
+    </div>
+    <div id="challengesList" class="list"></div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <div id="screenCategories" class="screen" aria-hidden="true">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h2>Categorias</h2>
+      <button id="addCategoryBtn" class="small">+ Categoria</button>
+    </div>
+    <div id="categoriesList" class="list"></div>
+  </div>
+
+  <footer>App offline — os dados ficam salvos apenas no seu navegador.</footer>
+</div>
+
+<!-- Next level bar (fixed above footer) - will be shown only on PLAY screen via JS -->
+<div id="nextLevelBar" class="next-level-bar">
+  <div>
+    <button id="btnNextLevel" class="next-level-btn">Próximo nível</button>
+  </div>
+</div>
+
+<input id="hiddenCsvInput" type="file" accept=".csv" style="display:none" />
+<input id="hiddenJsonInput" type="file" accept=".json" style="display:none" />
+<div id="overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000"></div>
+<div id="modal" style="display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1010"></div>
+
+<!-- COUNTDOWN overlay -->
+<div id="countdownOverlay">
+  <div id="countNumber" class="count-number" aria-hidden="true"></div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', ()=>{
+
+/* ---------- util ---------- */
+const STORAGE_KEY = 'desafios_eroticos_v1';
+function uid(pref='id'){ return pref + Math.random().toString(36).slice(2,9); }
+function escapeHtml(s){ if(!s) return ''; return s.replace(/[&<>\"']/g, m=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function shuffle(a){ const arr = a.slice(); for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]] } return arr; }
+
+/* ---------- categories requested by you (exact order) ---------- */
+const DEFAULT_CATEGORIES = ['Aquecimento','Preliminares','Masturbação','Oral','Submissão','Pesado'];
+
+/* ---------- built-in challenges (sua lista) ----------
+   NOTE: We try to reassign categories to match keywords (best-effort).
+   Existing weights are preserved if present; otherwise default weight = 2 (per sua instrução).
+*/
+const BUILTIN_CHALLENGES = [
+{"text": "Faça uma garganta profunda na(o) {player}", "category": "Pesado", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 1},
+{"text": "Sente no rosto do(a) {player}", "category": "Pesado", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 1},
+{"text": "Tire uma peça de roupa do(a) {player}", "category": "Preliminares", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 1},
+{"text": "Tire uma peça de roupa", "category": "Preliminares", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 1},
+{"text": "Beijo sexy no(a) {player}", "category": "Aquecimento", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 1},
+{"text": "Beijar o pescoço do(a) {player}", "category": "Aquecimento", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 1},
+{"text": "Passe seus pés pelo corpo do(a) {player}", "category": "Aquecimento", "actorGender": "F", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Chupe o dedo da(o) {player}", "category": "Aquecimento", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Massageie os seios da {player} por cima da roupa", "category": "Aquecimento", "actorGender": "any", "targetGender": "F", "allowSelf": false, "weight": 2},
+{"text": "Chupe a orelha do(a) {player}", "category": "Aquecimento", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Lamba a bunda da(o) {player}", "category": "Aquecimento", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Acaricie o rosto do(a) {player}", "category": "Aquecimento", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Passe a lingua no tronco da(o) {player}", "category": "Aquecimento", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Acaricie o seu corpo com as mãos do(a) {player}", "category": "Aquecimento", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Morder a orelha do(a) {player}", "category": "Aquecimento", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Morder a bunda do(a) {player}", "category": "Aquecimento", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Masturbe o(a) {player} por cima da roupa", "category": "Aquecimento", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Masturbe o {player} com seus peitos", "category": "Masturbação", "actorGender": "F", "targetGender": "M", "allowSelf": false, "weight": 2},
+{"text": "Masturbe o {player} com seus pés", "category": "Masturbação", "actorGender": "F", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Se masturbe com os pés da {player}", "category": "Masturbação", "actorGender": "any", "targetGender": "F", "allowSelf": false, "weight": 2},
+{"text": "Acaricie o pênis do {player}", "category": "Masturbação", "actorGender": "any", "targetGender": "M", "allowSelf": false, "weight": 2},
+{"text": "Penetre a {player} com os dedos", "category": "Masturbação", "actorGender": "any", "targetGender": "F", "allowSelf": false, "weight": 2},
+{"text": "Masturbe o(a) {player} com suas mãos", "category": "Masturbação", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Faça sexo oral na(o) {player}", "category": "Oral", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Faça um 69 com {player}", "category": "Oral", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Passe a língua no clitóris da {player}", "category": "Oral", "actorGender": "any", "targetGender": "F", "allowSelf": false, "weight": 2},
+{"text": "Faça sexo oral no(a) {player}", "category": "Oral", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Deixe a {player} molhada", "category": "Oral", "actorGender": "any", "targetGender": "F", "allowSelf": false, "weight": 2},
+{"text": "Deixe o pênis do {player} bem molhado", "category": "Oral", "actorGender": "any", "targetGender": "M", "allowSelf": false, "weight": 2},
+{"text": "Transe com a {player} no estilo papai-e-mamãe", "category": "Pesado", "actorGender": "M", "targetGender": "F", "allowSelf": false, "weight": 2},
+{"text": "Transe com o(a) {player} no estilo frango assado", "category": "Pesado", "actorGender": "M", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Transe com o(a) {player} de quatro", "category": "Pesado", "actorGender": "M", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Passe seu pênis nos peitos da(o) {player}", "category": "Preliminares", "actorGender": "M", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Chupe os seios da {player}", "category": "Preliminares", "actorGender": "any", "targetGender": "F", "allowSelf": false, "weight": 2},
+{"text": "Chupe os mamilos do {player}", "category": "Preliminares", "actorGender": "any", "targetGender": "M", "allowSelf": false, "weight": 2},
+{"text": "Massageie os seios da {player}", "category": "Preliminares", "actorGender": "any", "targetGender": "F", "allowSelf": false, "weight": 2},
+{"text": "Faça o que quiser com o(a) {player}", "category": "Preliminares", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Sopre o pênis do {player}", "category": "Preliminares", "actorGender": "any", "targetGender": "M", "allowSelf": false, "weight": 2},
+{"text": "Sopre a vagina da {player}", "category": "Preliminares", "actorGender": "any", "targetGender": "F", "allowSelf": false, "weight": 2},
+{"text": "Acaricie o seu corpo com as mãos do(a) {player}", "category": "Preliminares", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Massagem no(a) {player}", "category": "Preliminares", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Beijar o corpo do(a) {player}", "category": "Preliminares", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Dar uma palmada no(a) {player}", "category": "Preliminares", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Rebole para o(a) {player}", "category": "Preliminares", "actorGender": "F", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Amarre a(o) {player} e faça o que quiser", "category": "Submissão", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+{"text": "Chicoteie o(a) {player}", "category": "Submissão", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2},
+];
+
+/* ---------- state ----------
+   - categories follow the exact order you requested
+   - challenges keep existing weights when present; if not present => default weight 2
+   - categoryDecks used by category-mode draw
+*/
+let state = {
+  players: [],
+  categories: DEFAULT_CATEGORIES.slice(),
+  challenges: [],
+  nextActorIndex: 0,
+  currentCategoryIndex: 0,
+  categoryDecks: {}
+};
+
+/* ---------- helper: best-effort reassign category by text keywords ----------
+   This tries to correct items that were in the wrong category according to your mapping.
+   It's conservative: only changes when a keyword strongly indicates a category.
+*/
+function inferCategoryFromText(text){
+  if(!text) return null;
+  const t = text.toLowerCase();
+  if(t.includes('masturb') || t.includes('masturbe') || t.includes('masturba')) return 'Masturbação';
+  if(t.includes('clit') || t.includes('sexo oral') || t.includes('69') || t.includes('garganta profunda') || t.includes('69') || t.includes('lamba') || t.includes('chupe') || t.includes('chupar') || t.includes('oral') || t.includes('sopre') ) return 'Oral';
+  if(t.includes('amarre') || t.includes('chicote') || t.includes('submiss') || t.includes('domine') ) return 'Submissão';
+  if(t.includes('transe') || t.includes('papai') || t.includes('de quatro') || t.includes('sente no rosto') || t.includes('garganta')) return 'Pesado';
+  if(t.includes('beij') || t.includes('massag') || t.includes('acarici') || t.includes('olho') || t.includes('rosto')) return 'Aquecimento';
+  // fallback: don't force — return null
+  return null;
+}
+
+/* ---------- init state: preserve user saved data; merge builtins conservatively ----------
+   - existing stored challenges keep their category/weight
+   - if a builtin challenge has no stored version, we add it; when adding, we attempt to infer category via keywords
+   - default weight for new challenges = 2 (per your instruction for new items)
+*/
+(function initState(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(raw){
+    try{
+      const existing = JSON.parse(raw);
+      state.players = Array.isArray(existing.players) ? existing.players : [];
+      state.categories = Array.isArray(existing.categories) && existing.categories.length ? existing.categories : DEFAULT_CATEGORIES.slice();
+      state.challenges = Array.isArray(existing.challenges) ? existing.challenges : [];
+      state.nextActorIndex = (typeof existing.nextActorIndex === 'number') ? existing.nextActorIndex : 0;
+      state.currentCategoryIndex = (typeof existing.currentCategoryIndex === 'number') ? existing.currentCategoryIndex : 0;
+      state.categoryDecks = existing.categoryDecks || {};
+    }catch(e){
+      state.players = [];
+      state.categories = DEFAULT_CATEGORIES.slice();
+      state.challenges = [];
+      state.nextActorIndex = 0;
+      state.currentCategoryIndex = 0;
+      state.categoryDecks = {};
+    }
+  }
+
+  // if no challenges at all, seed with builtins
+  if(!state.challenges.length){
+    state.challenges = BUILTIN_CHALLENGES.map(c => {
+      // infer category if absent or overridden
+      const inferred = inferCategoryFromText(c.text);
+      const category = c.category || inferred || DEFAULT_CATEGORIES[1]; // default Preliminares if nothing
+      const weight = (typeof c.weight !== 'undefined') ? c.weight : 2;
+      return Object.assign({ id: uid('c'), allowSelf: !!c.allowSelf }, c, { category, weight });
+    });
+    saveState();
+  } else {
+    // merge builtins: preserve stored items' weight/category; add missing builtins (with best-effort category and default weight 2)
+    const mapTextToIndex = new Map();
+    state.challenges.forEach((c,i)=> mapTextToIndex.set((c.text||'').trim(), i));
+    BUILTIN_CHALLENGES.forEach(b => {
+      const t = (b.text||'').trim();
+      if(!t) return;
+      if(mapTextToIndex.has(t)){
+        const idx = mapTextToIndex.get(t);
+        const exist = state.challenges[idx];
+        // ensure actor/target genders align with builtin definition
+        if((exist.actorGender||'any') !== (b.actorGender||'any') || (exist.targetGender||'any') !== (b.targetGender||'any')){
+          exist.actorGender = b.actorGender || exist.actorGender || 'any';
+          exist.targetGender = b.targetGender || exist.targetGender || 'any';
+        }
+        // ensure weight exists; if missing, default to 2
+        if(typeof exist.weight === 'undefined') exist.weight = (typeof b.weight !== 'undefined') ? b.weight : 2;
+        // if category is missing, infer
+        if(!exist.category || !exist.category.length){
+          exist.category = inferCategoryFromText(exist.text) || (b.category || DEFAULT_CATEGORIES[1]);
+        }
+      } else {
+        // add missing builtin with inferred category and default weight = b.weight or 2
+        const inferred = inferCategoryFromText(b.text);
+        const category = b.category || inferred || DEFAULT_CATEGORIES[1];
+        const weight = (typeof b.weight !== 'undefined') ? b.weight : 2;
+        state.challenges.push(Object.assign({ id: uid('c'), allowSelf:false }, b, { category, weight }));
+      }
+    });
+    saveState();
+  }
+})();
+
+/* ---------- Navigation & UI ---------- */
+const screens = {
+  home: document.getElementById('screenHome'),
+  play: document.getElementById('screenPlay'),
+  config: document.getElementById('screenConfig'),
+  players: document.getElementById('screenPlayers'),
+  challenges: document.getElementById('screenChallenges'),
+  categories: document.getElementById('screenCategories')
+};
+const headerTitle = document.getElementById('headerTitle');
+const btnBack = document.getElementById('btnBack');
+const nextLevelBar = document.getElementById('nextLevelBar');
+let historyStack = ['home'];
+
+function showScreen(name){
+  Object.values(screens).forEach(s => s.classList.remove('active'));
+  if(screens[name]) screens[name].classList.add('active');
+  headerTitle.textContent = name === 'home' ? '' : (name==='play' ? 'Jogar' : (name==='config' ? 'Configurações' : (name==='players'?'Jogadores':(name==='challenges'?'Desafios':'Categorias'))));
+  btnBack.style.display = name === 'home' ? 'none' : 'inline-block';
+
+  // <-- NEW: show "Próximo nível" bar ONLY on the play screen
+  if(name === 'play'){
+    nextLevelBar.style.display = 'flex';
+  } else {
+    nextLevelBar.style.display = 'none';
+  }
+
+  historyStack.push(name);
+}
+
+/* btnBack behaviour */
+btnBack.addEventListener('click', ()=> {
+  const current = historyStack[historyStack.length-1];
+  if(current === 'play'){
+    historyStack = ['home'];
+    showScreen('home');
+    return;
+  }
+  historyStack.pop(); const prev = historyStack.pop() || 'home'; showScreen(prev);
+});
+
+/* Bind home buttons */
+const btnPlayHome = document.getElementById('btnPlay');
+const btnPlayFromPlayers = document.getElementById('btnPlayFromPlayers');
+
+const countdownOverlay = document.getElementById('countdownOverlay');
+const countNumber = document.getElementById('countNumber');
+
+const ANIM_MS = 500;
+
+/* When countdown runs we add class 'countdown-active' to <html> to hide everything under and show only numbers on a plain bg */
+function setCountdownActive(on){
+  if(on) document.documentElement.classList.add('countdown-active');
+  else document.documentElement.classList.remove('countdown-active');
+}
+
+/* countdown routine: shows 3,2,1 with pulse (1s each), then triggers enterPlayScreenAutoDraw */
+async function startCountdownThenPlay(){
+  const active = state.players.filter(p=>p.active).length;
+  if(active < 2){
+    alert('É necessário pelo menos 2 jogadores ativos');
+    showScreen('players');
+    renderAll();
+    return;
+  }
+
+  setCountdownActive(true);
+  countdownOverlay.style.display = 'flex';
+  countdownOverlay.style.pointerEvents = 'auto';
+  for(let n=3;n>=1;n--){
+    countNumber.textContent = n;
+    countNumber.classList.remove('pulse');
+    void countNumber.offsetWidth;
+    countNumber.classList.add('pulse');
+    await new Promise(res => setTimeout(res, 1000));
+  }
+  countdownOverlay.style.display = 'none';
+  countdownOverlay.style.pointerEvents = 'none';
+  setCountdownActive(false);
+  enterPlayScreenAutoDraw();
+}
+
+/* Update UI: current category pill */
+const currentCategoryPill = document.getElementById('currentCategoryPill');
+function updateCurrentCategoryPill(){
+  const cat = state.categories[state.currentCategoryIndex] || '—';
+  currentCategoryPill.textContent = cat; // <-- changed: only the category name (removed the prefix "Categoria:")
+}
+
+/* initialize deck for a category (called when entering that category) */
+function initDeckForCategory(cat){
+  if(!cat) return;
+  const key = String(cat);
+  // build arrays of challenges belonging to this category
+  const allInCategory = state.challenges.filter(c => (c.category || state.categories[0]) === cat);
+  // split by weight
+  const w1 = allInCategory.filter(c => Number(c.weight) === 1).map(c=>c.id);
+  const w2 = allInCategory.filter(c => Number(c.weight) !== 1).map(c=>c.id);
+  state.categoryDecks[key] = {
+    w1: shuffle(w1),
+    w2: shuffle(w2),
+  };
+  saveState();
+}
+
+/* enterPlayScreenAutoDraw: show play screen and auto sortear (in category mode) */
+function enterPlayScreenAutoDraw(){
+  const active = state.players.filter(p=>p.active).length;
+  if(active < 2){
+    alert('É necessário pelo menos 2 jogadores ativos');
+    showScreen('players');
+    renderAll();
+    return;
+  }
+  // start from first category
+  state.currentCategoryIndex = 0;
+  saveState();
+  const cat = state.categories[state.currentCategoryIndex];
+  initDeckForCategory(cat);
+  updateCurrentCategoryPill();
+  showScreen('play');
+  const resArea = document.getElementById('resultArea');
+  resArea.classList.add('hidden');
+  setTimeout(()=> {
+    const r = pickRound();
+    if(!r){ alert('Não foi possível encontrar combinação válida nesta categoria. Verifique jogadores e desafios.'); return; }
+    renderResult(r);
+    resArea.classList.remove('hidden');
+  }, 40);
+}
+
+/* Wire: home Jogar triggers countdown; jogar from players triggers countdown too */
+btnPlayHome.addEventListener('click', ()=> startCountdownThenPlay());
+btnPlayFromPlayers && btnPlayFromPlayers.addEventListener('click', ()=> startCountdownThenPlay());
+document.getElementById('btnConfig').addEventListener('click', ()=> { showScreen('config'); renderAll(); });
+
+/* Next level button handling */
+const btnNextLevel = document.getElementById('btnNextLevel');
+btnNextLevel.addEventListener('click', ()=> {
+  // if last category, finalize
+  if(state.currentCategoryIndex >= state.categories.length - 1){
+    showScreen('home');
+    return;
+  }
+  // advance category
+  state.currentCategoryIndex = state.currentCategoryIndex + 1;
+  const cat = state.categories[state.currentCategoryIndex];
+  initDeckForCategory(cat);
+  updateCurrentCategoryPill();
+  // update button text if now last category
+  if(state.currentCategoryIndex >= state.categories.length - 1){ btnNextLevel.textContent = 'Finalizar'; } else { btnNextLevel.textContent = 'Próximo nível'; }
+  const resArea = document.getElementById('resultArea');
+  resArea.classList.add('hidden');
+  setTimeout(()=> {
+    const r = pickRound();
+    if(!r){ alert('Não foi possível encontrar combinação válida nesta categoria. Verifique jogadores e desafios.'); return; }
+    renderResult(r);
+    resArea.classList.remove('hidden');
+  }, 40);
+});('click', ()=> {
+  // advance category
+  if(state.currentCategoryIndex >= state.categories.length - 1){
+    alert('Você já chegou na última categoria.');
+    return;
+  }
+  state.currentCategoryIndex = state.currentCategoryIndex + 1;
+  const cat = state.categories[state.currentCategoryIndex];
+  initDeckForCategory(cat);
+  updateCurrentCategoryPill();
+  // after advancing, auto-draw next
+  const resArea = document.getElementById('resultArea');
+  resArea.classList.add('hidden');
+  setTimeout(()=> {
+    const r = pickRound();
+    if(!r){ alert('Não foi possível encontrar combinação válida nesta categoria. Verifique jogadores e desafios.'); return; }
+    renderResult(r);
+    resArea.classList.remove('hidden');
+  }, 40);
+});
+
+/* ---------- Game logic (categoria-aware) ---------- */
+function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+function eligibleTargets(actor){
+  const others = state.players.filter(p=>p.active && p.id!==actor.id);
+  if(actor.orientation === 'hetero') return others.filter(o=> o.gender && o.gender !== actor.gender);
+  if(actor.orientation === 'homo') return others.filter(o=> o.gender && o.gender === actor.gender);
+  return others;
+}
+
+function challengeCompatible(ch, actor, target){
+  if(ch.actorGender && ch.actorGender!=='any' && ch.actorGender !== actor.gender) return false;
+  if(ch.targetGender && ch.targetGender!=='any' && ch.targetGender !== target.gender) return false;
+  if(!ch.allowSelf && actor.id === target.id) return false;
+  return true;
+}
+
+/* pickRound agora tenta sortear DENTRO da categoria atual, priorizando weight 1 (w1) até esgotar */
+function pickRound(){
+  const activePlayers = state.players.filter(p=>p.active);
+  if(activePlayers.length < 2){ return null; }
+  const total = state.players.length;
+  if(total === 0) return null;
+  let start = (typeof state.nextActorIndex === 'number') ? state.nextActorIndex % total : 0;
+
+  // current category name
+  const currentCategory = state.categories[state.currentCategoryIndex];
+  if(!currentCategory) return null;
+
+  // ensure deck exists
+  const deckKey = String(currentCategory);
+  if(!state.categoryDecks[deckKey]){
+    initDeckForCategory(currentCategory);
+  }
+
+  // iterate over players to find an actor with a compatible challenge inside this category following priority
+  for(let trial=0; trial<total; trial++){
+    const idx = (start + trial) % total;
+    const actor = state.players[idx];
+    if(!actor || !actor.active) continue;
+    const targets = eligibleTargets(actor);
+    if(!targets.length) continue;
+
+    // shuffle targets for randomness
+    const target = rand(targets);
+
+    // Try to draw from w1 pool first (prioridade)
+    const deck = state.categoryDecks[deckKey];
+    // helper to pop next usable challenge id from given pool considering compatibility
+    function popCompatibleFromPool(poolArr){
+      for(let i=0;i<poolArr.length;i++){
+        const cid = poolArr[i];
+        const ch = state.challenges.find(x=>x.id===cid);
+        if(!ch) continue;
+        if(challengeCompatible(ch, actor, target)){
+          // remove from pool and return challenge
+          poolArr.splice(i,1);
+          return ch;
+        }
+      }
+      return null;
+    }
+
+    // first priority: w1
+    let chosen = null;
+    if(deck && deck.w1 && deck.w1.length){
+      chosen = popCompatibleFromPool(deck.w1);
+    }
+    // if none from w1, try w2
+    if(!chosen && deck && deck.w2 && deck.w2.length){
+      chosen = popCompatibleFromPool(deck.w2);
+    }
+
+    // If still none, try to search ANY challenge in this category compatible (maybe it wasn't in deck due to prior removal)
+    if(!chosen){
+      const pool = state.challenges.filter(ch => (ch.category || '') === currentCategory && challengeCompatible(ch, actor, target));
+      if(pool.length) chosen = rand(pool);
+    }
+
+    // If found, update nextActorIndex and save state
+    if(chosen){
+      state.nextActorIndex = (idx + 1) % total;
+      saveState();
+      return { actor, target, challenge: chosen };
+    }
+    // else continue to next actor
+  }
+  // if no combination found for any actor inside this category
+  return null;
+}
+
+/* unify placeholders */
+function unifyArticlesForPlayerPlaceholders(text){
+  if(!text) return text;
+  text = text.replace(/\b(do|da)\s+\{player\}/gi, 'do(a) {player}');
+  text = text.replace(/\b(no|na)\s+\{player\}/gi, 'no(a) {player}');
+  text = text.replace(/\b(o|a)\s+\{player\}/gi, 'o(a) {player}');
+  text = text.replace(/\b(seu|sua)\s+\{player\}/gi, 'seu(a) {player}');
+  text = text.replace(/\b(seus|suas)\s+\{player\}/gi, 'seus(as) {player}');
+  text = text.replace(/\b(ao|à|aos|às)\s+\{player\}/gi, 'ao(a) {player}');
+  return text;
+}
+
+/* ---------- Play UI ---------- */
+const resultArea = document.getElementById('resultArea');
+const btnAgain = document.getElementById('btnAgain');
+const resultActor = document.getElementById('resultActor');
+const resultChallenge = document.getElementById('resultChallenge');
+
+function renderResult(r){
+  resultActor.textContent = r.actor.name;
+  let text = r.challenge.text || '';
+  text = unifyArticlesForPlayerPlaceholders(text);
+  text = text.replace(/\{player\}/gi, r.target.name);
+  resultChallenge.textContent = text;
+}
+
+/* btnAgain: fade out -> pick -> fade in (0.5s) */
+btnAgain.addEventListener('click', async ()=> {
+  resultArea.classList.add('hidden');
+  await new Promise(res => setTimeout(res, ANIM_MS));
+  const r = pickRound();
+  if(!r){
+    alert('Sem combinação válida na categoria atual');
+    resultArea.classList.remove('hidden');
+    return;
+  }
+  renderResult(r);
+  resultArea.classList.remove('hidden');
+});
+
+/* ---------- Config: Jogadores / Export / Import / Reset ---------- */
+document.getElementById('cfg_players').addEventListener('click', ()=> showScreen('players'));
+document.getElementById('cfg_challenges').addEventListener('click', ()=> showScreen('challenges'));
+
+document.getElementById('cfg_export').addEventListener('click', ()=> {
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'desafios_export.json'; a.click();
+  URL.revokeObjectURL(url);
+});
+
+/* Import JSON fallback */
+const hiddenJsonInput = document.getElementById('hiddenJsonInput');
+document.getElementById('cfg_import').addEventListener('click', ()=> hiddenJsonInput.click());
+hiddenJsonInput.addEventListener('change', (ev)=> {
+  const f = ev.target.files[0]; if(!f) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try{
+      const obj = JSON.parse(e.target.result);
+      if(!obj || !Array.isArray(obj.players) || !Array.isArray(obj.challenges)){ alert('JSON inválido: deve conter arrays "players" e "challenges".'); hiddenJsonInput.value=''; return; }
+      if(!confirm('Importar o JSON irá SUBSTITUIR o estado atual. Deseja continuar?')){ hiddenJsonInput.value=''; return; }
+      // when importing, ensure missing weight => default 2 and ensure categories exist
+      state.players = obj.players.map(p => Object.assign({ id: p.id || uid('p'), name: p.name || 'Jogador', gender: p.gender || 'M', orientation: p.orientation || 'hetero', active: (typeof p.active !== 'undefined' ? p.active : true) }, p));
+      state.challenges = obj.challenges.map(c => Object.assign({ id: c.id || uid('c'), text: c.text || c.desafio || 'Desafio', category: c.category || DEFAULT_CATEGORIES[1], actorGender: c.actorGender || 'any', targetGender: c.targetGender || 'any', allowSelf: !!c.allowSelf, weight: (typeof c.weight !== 'undefined' ? c.weight : 2) }, c));
+      state.categories = Array.isArray(obj.categories) && obj.categories.length ? obj.categories : DEFAULT_CATEGORIES.slice();
+      state.nextActorIndex = 0;
+      state.currentCategoryIndex = 0;
+      state.categoryDecks = {};
+      saveState(); renderAll(); alert('Importação concluída.');
+    } catch(err){ console.error(err); alert('Erro lendo o arquivo JSON.'); } finally { hiddenJsonInput.value=''; }
+  };
+  reader.readAsText(f);
+});
+
+/* CSV import for challenges (button next to +Desafio) */
+const hiddenCsvInput = document.getElementById('hiddenCsvInput');
+document.getElementById('importChallengesBtn').addEventListener('click', ()=> hiddenCsvInput.click());
+hiddenCsvInput.addEventListener('change', (ev)=> {
+  const f = ev.target.files[0]; if(!f) return;
+  const name = f.name.toLowerCase(); if(!name.endsWith('.csv')){ alert('Selecione um arquivo .csv'); hiddenCsvInput.value=''; return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    try{
+      const txt = e.target.result;
+      const parsed = parseCsvToChallenges(txt);
+      if(!parsed || !parsed.length){ alert('CSV não contém desafios válidos'); hiddenCsvInput.value=''; return; }
+      if(!confirm('Importar o CSV irá SUBSTITUIR todos os desafios atuais. Deseja continuar?')){ hiddenCsvInput.value=''; return; }
+      // set default weight = 2 for imported rows unless specified
+      state.challenges = parsed.map(c => Object.assign({ id: uid('c'), weight: (typeof c.weight !== 'undefined' ? c.weight : 2) }, c));
+      state.nextActorIndex = 0;
+      state.categoryDecks = {};
+      saveState(); renderChallenges(); alert('Importação de desafios concluída.');
+    } catch(err){ console.error(err); alert('Erro lendo o arquivo CSV.'); } finally { hiddenCsvInput.value=''; }
+  };
+  reader.readAsText(f, 'UTF-8');
+});
+
+function parseCsvToChallenges(text){
+  const lines = text.replace(/\r/g,'').split('\n').map(l=>l.trim()).filter(l=>l.length);
+  if(!lines.length) return [];
+  const header = lines[0];
+  const sep = header.includes(';') && (header.split(';').length > header.split(',').length) ? ';' : ',';
+  const cols = header.split(sep).map(c => c.trim());
+  const idxCategoria = cols.findIndex(c => /categoria/i.test(c));
+  const idxDesafio = cols.findIndex(c => /desafio/i.test(c));
+  const idxQuem = cols.findIndex(c => /quem/i.test(c));
+  const idxEmQuem = cols.findIndex(c => /em quem/i.test(c) || /emquem/i.test(c) || /em\s*quem/i.test(c));
+  const idxWeight = cols.findIndex(c => /peso/i.test(c) || /weight/i.test(c));
+  if(idxDesafio === -1){ return []; }
+  const out = [];
+  for(let i=1;i<lines.length;i++){
+    const row = lines[i].split(sep).map(cell => cell.trim());
+    const text = row[idxDesafio] || row[1] || '';
+    if(!text) continue;
+    const category = (idxCategoria !== -1 ? (row[idxCategoria] || DEFAULT_CATEGORIES[1]) : DEFAULT_CATEGORIES[1]);
+    const who = (idxQuem !== -1 ? (row[idxQuem] || 'Ambos') : (row[2] || 'Ambos'));
+    const emquem = (idxEmQuem !== -1 ? (row[idxEmQuem] || 'Ambos') : (row[3] || 'Ambos'));
+    const weightRaw = (idxWeight !== -1 ? (row[idxWeight] || '') : '');
+    const actorGender = mapPortugueseGender(who);
+    const targetGender = mapPortugueseGender(emquem);
+    const weight = weightRaw ? Number(weightRaw) : 2;
+    out.push({ text, category, actorGender, targetGender, allowSelf:false, weight });
+  }
+  return out;
+}
+function mapPortugueseGender(str){
+  if(!str) return 'any';
+  const s = str.toLowerCase();
+  if(s.includes('homem') || s.includes('mascul')) return 'M';
+  if(s.includes('mulher') || s.includes('femin')) return 'F';
+  return 'any';
+}
+
+/* Reset */
+document.getElementById('cfg_reset').addEventListener('click', ()=> {
+  if(!confirm('Resetar as configurações irá restaurar categorias e desafios originais e remover jogadores. Deseja continuar?')) return;
+  state.players = [];
+  state.categories = DEFAULT_CATEGORIES.slice();
+  state.challenges = BUILTIN_CHALLENGES.map(b => {
+    const inferred = inferCategoryFromText(b.text);
+    const category = b.category || inferred || DEFAULT_CATEGORIES[1];
+    const weight = (typeof b.weight !== 'undefined') ? b.weight : 2;
+    return Object.assign({ id: uid('c'), allowSelf:false }, b, { category, weight });
+  });
+  state.nextActorIndex = 0;
+  state.currentCategoryIndex = 0;
+  state.categoryDecks = {};
+  saveState();
+  renderAll();
+  alert('Configurações restauradas aos padrões.');
+});
+
+/* ---------- Jogadores UI ---------- */
+const playersList = document.getElementById('playersList');
+document.getElementById('addPlayerBtn').addEventListener('click', ()=> openPlayerModal());
+function renderPlayers(){
+  playersList.innerHTML = '';
+  state.players.forEach(p=>{
+    const card = document.createElement('div'); card.className='card';
+    const left = document.createElement('div');
+    left.innerHTML = `<div style="display:flex;gap:12px;align-items:center">
+      <div style="width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center">${(p.name||'?').slice(0,1).toUpperCase()}</div>
+      <div>
+        <div style="font-weight:700">${escapeHtml(p.name)}</div>
+        <div class="muted">${p.gender==='M'?'Masculino':'Feminino'} · ${p.orientation==='hetero'?'Hetero':(p.orientation==='homo'?'Homo':'Bissexual')}</div>
+      </div>
+    </div>`;
+    const right = document.createElement('div');
+    right.style.display='flex'; right.style.gap='8px'; right.style.alignItems='center';
+
+    const toggle = document.createElement('div'); toggle.className = 'switch ' + (p.active ? 'on' : 'off'); toggle.innerHTML = '<div class="knob"></div>';
+    toggle.title = p.active ? 'Jogador ativo' : 'Jogador inativo';
+    toggle.addEventListener('click', ()=>{ p.active = !p.active; saveState(); renderPlayers(); });
+
+    const editBtn = document.createElement('button'); editBtn.className='icon-btn'; editBtn.title='Editar';
+    editBtn.innerHTML = `
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 21h3l11-11-3-3L3 18v3z" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M14.5 6.5l3 3" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>`;
+    editBtn.addEventListener('click', ()=> openPlayerModal(p));
+
+    const delBtn = document.createElement('button'); delBtn.className='icon-btn'; delBtn.title='Excluir';
+    delBtn.innerHTML = `
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 6h18" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M10 11v6M14 11v6" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>`;
+    delBtn.addEventListener('click', ()=> { if(confirm('Excluir jogador '+p.name+'?')){ state.players = state.players.filter(x=>x.id!==p.id); saveState(); renderPlayers(); }});
+    right.appendChild(toggle); right.appendChild(editBtn); right.appendChild(delBtn);
+
+    card.appendChild(left); card.appendChild(right);
+    playersList.appendChild(card);
+  });
+}
+
+/* Modal base */
+const overlay = document.getElementById('overlay');
+const modal = document.getElementById('modal');
+function openModalInner(contentHtml){
+  overlay.style.display='block';
+  modal.style.display='block';
+  modal.innerHTML = `<div style="position:relative;background:#2f3a48;padding:14px;border-radius:12px;min-width:320px;color:var(--white)">${contentHtml}</div>`;
+}
+function closeModal(){ overlay.style.display='none'; modal.style.display='none'; modal.innerHTML=''; }
+overlay.addEventListener('click', closeModal);
+
+/* Player modal */
+function openPlayerModal(player){
+  const isEdit = !!player;
+  const html = `
+    <button id="pm_close_x" class="modal-close-x" aria-label="Fechar">✕</button>
+    <h3>${isEdit?'Editar':'Adicionar'} jogador</h3>
+    <div class="form-row">
+      <label>Nome</label><input id="pm_name" type="text" value="${isEdit?escapeHtml(player?.name):''}" />
+      <label>Gênero</label>
+      <select id="pm_gender" class="select-white"><option value="F">Feminino</option><option value="M">Masculino</option></select>
+      <label>Orientação</label>
+      <select id="pm_orientation" class="select-white"><option value="hetero">Heterossexual</option><option value="homo">Homossexual</option><option value="bi">Bissexual</option></select>
+      <label><input id="pm_active" type="checkbox" ${isEdit && player.active ? 'checked' : (isEdit? '':'checked') } /> Ativo no jogo</label>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px">
+      <button id="pm_save" class="small">Salvar</button>
+    </div>
+  `;
+  openModalInner(html);
+
+  document.getElementById('pm_close_x').addEventListener('click', closeModal);
+
+  if(isEdit){
+    document.getElementById('pm_gender').value = player.gender;
+    document.getElementById('pm_orientation').value = player.orientation;
+    document.getElementById('pm_active').checked = !!player.active;
+  }
+  document.getElementById('pm_save').addEventListener('click', ()=>{
+    const name = document.getElementById('pm_name').value.trim();
+    const gender = document.getElementById('pm_gender').value;
+    const orient = document.getElementById('pm_orientation').value;
+    const active = document.getElementById('pm_active').checked;
+    if(!name){ alert('Nome é obrigatório'); return; }
+    if(isEdit){ player.name = name; player.gender = gender; player.orientation = orient; player.active = active; }
+    else { state.players.push({id: uid('p'), name, gender, orientation: orient, active}); }
+    saveState(); closeModal(); renderPlayers();
+  });
+}
+
+/* Challenges UI */
+const challengesList = document.getElementById('challengesList');
+document.getElementById('addChallengeBtn').addEventListener('click', ()=> openChallengeModal());
+function renderChallenges(){
+  challengesList.innerHTML = '';
+  state.challenges.forEach(ch=>{
+    const row = document.createElement('div');
+    row.className = 'challenge-row';
+    const left = document.createElement('div');
+    left.className = 'challenge-text';
+    left.textContent = ch.text || '';
+    const right = document.createElement('div');
+    right.style.display='flex'; right.style.alignItems='center';
+    // per your request: DO NOT show category or weight in the list
+    const editBtn = document.createElement('button');
+    editBtn.className = 'icon-btn';
+    editBtn.title = 'Editar desafio';
+    editBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 21h3l11-11-3-3L3 18v3z" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M14.5 6.5l3 3" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
+    editBtn.addEventListener('click', ()=> openChallengeModal(ch));
+    right.appendChild(editBtn);
+    row.appendChild(left); row.appendChild(right);
+    challengesList.appendChild(row);
+  });
+}
+
+/* utility to insert text at cursor in textarea */
+function insertAtCursor(textarea, textToInsert){
+  if(!textarea) return;
+  const start = textarea.selectionStart || 0;
+  const end = textarea.selectionEnd || 0;
+  const val = textarea.value || '';
+  textarea.value = val.slice(0,start) + textToInsert + val.slice(end);
+  const pos = start + textToInsert.length;
+  textarea.selectionStart = textarea.selectionEnd = pos;
+  textarea.focus();
+}
+
+/* openChallengeModal: removed weight selection (per your request).
+   New challenges will default to weight = 2.
+*/
+function openChallengeModal(ch){
+  const isEdit = !!ch;
+  const html = `
+    <button id="ch_close_x" class="modal-close-x" aria-label="Fechar">✕</button>
+    <h3>${isEdit?'Editar':'Adicionar'} desafio</h3>
+    <div class="form-row">
+      <label>Texto do desafio</label>
+      <textarea id="ch_text" rows="4">${isEdit?escapeHtml(ch.text):''}</textarea>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+        <div>
+          <label>Quem pode fazer isso?</label><br/>
+          <label><input type="radio" name="actor_sel" value="M" /> Homem</label>
+          <label style="margin-left:8px"><input type="radio" name="actor_sel" value="F" /> Mulher</label>
+          <label style="margin-left:8px"><input type="radio" name="actor_sel" value="any" checked /> Ambos</label>
+        </div>
+      </div>
+      <div style="margin-top:8px">
+        <label>Em quem?</label><br/>
+        <label><input type="radio" name="target_sel" value="M" /> Homem</label>
+        <label style="margin-left:8px"><input type="radio" name="target_sel" value="F" /> Mulher</label>
+        <label style="margin-left:8px"><input type="radio" name="target_sel" value="any" checked /> Ambos</label>
+      </div>
+      <label style="margin-top:8px">Categoria</label>
+      <div id="ch_category_container"></div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+        <div style="display:flex;gap:8px">
+          <button id="ch_insert_player" class="insert-btn">NOME DO JOGADOR</button>
+        </div>
+        <div class="modal-actions-right">
+          ${isEdit ? '<button id="ch_delete" class="danger">Excluir</button>' : ''}
+          <button id="ch_save" class="btn-primary-small">Salvar</button>
+        </div>
+      </div>
+    </div>
+  `;
+  openModalInner(html);
+
+  document.getElementById('ch_close_x').addEventListener('click', closeModal);
+
+  const container = document.getElementById('ch_category_container');
+  container.innerHTML = '';
+  const sel = document.createElement('select');
+  sel.id = 'ch_category_select';
+  sel.className = 'select-white';
+  (state.categories || []).forEach(cat => {
+    const opt = document.createElement('option'); opt.value = cat; opt.textContent = cat; sel.appendChild(opt);
+  });
+  container.appendChild(sel);
+
+  if(isEdit){
+    document.querySelectorAll('input[name="actor_sel"]').forEach(r=> r.checked = (r.value === (ch.actorGender || 'any')));
+    document.querySelectorAll('input[name="target_sel"]').forEach(r=> r.checked = (r.value === (ch.targetGender || 'any')));
+    document.getElementById('ch_category_select').value = ch.category || (state.categories[0] || '');
+    // removed allowSelf handling (option removed)
+    // NOTE: weight selection removed on purpose
+  } else {
+    document.getElementById('ch_category_select').value = state.categories[0] || '';
+  }
+
+  const textarea = document.getElementById('ch_text');
+  document.getElementById('ch_insert_player').addEventListener('click', (ev)=>{ ev.preventDefault(); insertAtCursor(textarea, '{player}'); });
+
+  document.getElementById('ch_save').addEventListener('click', ()=> {
+    const text = document.getElementById('ch_text').value.trim();
+    const category = (document.getElementById('ch_category_select') && document.getElementById('ch_category_select').value) ? document.getElementById('ch_category_select').value.trim() : DEFAULT_CATEGORIES[1];
+    const actorRadio = document.querySelector('input[name="actor_sel"]:checked');
+    const actorGender = actorRadio ? actorRadio.value : 'any';
+    const targetRadio = document.querySelector('input[name="target_sel"]:checked');
+    const targetGender = targetRadio ? targetRadio.value : 'any';
+    const allowSelf = false; // option removed — force false
+    if(!text){ alert('Texto é obrigatório'); return; }
+    if(isEdit){ 
+      ch.text = text; ch.category = category; ch.actorGender = actorGender; ch.targetGender = targetGender; ch.allowSelf = allowSelf;
+      // keep existing weight untouched
+      if(typeof ch.weight === 'undefined') ch.weight = 2;
+    }
+    else { 
+      // NEW challenge: default weight = 2 (per sua instrução) and allowSelf false
+      state.challenges.push({ id: uid('c'), text, category, actorGender, targetGender, allowSelf: false, weight: 2 }); 
+    }
+    // reset category decks because challenges changed
+    state.categoryDecks = {};
+    saveState(); closeModal(); renderChallenges();
+  });
+
+  if(isEdit){
+    const delBtn = document.getElementById('ch_delete');
+    delBtn.addEventListener('click', ()=> {
+      if(!confirm('Excluir desafio?')) return;
+      state.challenges = state.challenges.filter(x=> x.id !== ch.id);
+      state.categoryDecks = {};
+      saveState();
+      closeModal();
+      renderChallenges();
+    });
+  }
+}
+
+/* Categories UI */
+const categoriesList = document.getElementById('categoriesList');
+document.getElementById('addCategoryBtn').addEventListener('click', ()=> {
+  const name = prompt('Nome da nova categoria:');
+  if(name && name.trim()){ state.categories.push(name.trim()); state.categoryDecks = {}; saveState(); renderCategories(); }
+});
+function renderCategories(){
+  categoriesList.innerHTML = '';
+  state.categories.forEach((c,i)=>{
+    const card = document.createElement('div'); card.className='card';
+    card.innerHTML = `<div><strong>${escapeHtml(c)}</strong></div><div><button class="small">Excluir</button></div>`;
+    card.querySelector('button').addEventListener('click', ()=> { if(confirm('Excluir categoria "'+c+'"?')){ state.categories.splice(i,1); state.categoryDecks = {}; saveState(); renderCategories(); }});
+    categoriesList.appendChild(card);
+  });
+}
+
+/* Helpers & initial render */
+function renderAll(){ renderPlayers(); renderChallenges(); renderCategories(); updateCurrentCategoryPill(); }
+renderAll();
+
+}); // DOMContentLoaded
+</script>
+</body>
+</html>
