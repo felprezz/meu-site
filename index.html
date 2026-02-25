@@ -554,26 +554,6 @@ btnNextLevel.addEventListener('click', ()=> {
     renderResult(r);
     resArea.classList.remove('hidden');
   }, 40);
-});('click', ()=> {
-  // advance category
-  if(state.currentCategoryIndex >= state.categories.length - 1){
-    alert('Você já chegou na última categoria.');
-    return;
-  }
-  state.currentCategoryIndex = state.currentCategoryIndex + 1;
-  const cat = state.categories[state.currentCategoryIndex];
-  initDeckForCategory(cat);
-  updateCurrentCategoryPill();
-  // after advancing, auto-draw next
-  const resArea = document.getElementById('resultArea');
-  resArea.classList.add('hidden');
-  setTimeout(()=> {
-    const r = pickRound();
-    if(!r){ alert('Não foi possível encontrar combinação válida nesta categoria. Verifique jogadores e desafios.'); return; }
-    renderResult(r);
-    resArea.classList.remove('hidden');
-  }, 40);
-});
 
 /* ---------- Game logic (categoria-aware) ---------- */
 function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
@@ -1080,6 +1060,7 @@ renderAll();
 </script>
 </body>
 </html>
+
 
 
 
