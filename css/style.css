@@ -1,0 +1,707 @@
+/* ========================================
+   Design System — Game-like visual
+   Categoria gradient: Fria (leve) → Quente (pesado)
+   ======================================== */
+
+/* ---------- Tokens ---------- */
+:root {
+  --bg: #111114;
+  --bg-surface: #1a1a1e;
+  --card: #202024;
+  --card-hover: #28282e;
+  --border: rgba(255, 255, 255, 0.07);
+  --border-light: rgba(255, 255, 255, 0.04);
+
+  /* Primary: Lavender */
+  --primary: #C9B8E8;
+  --primary-strong: #B8A0D8;
+  --primary-dim: rgba(201, 184, 232, 0.12);
+
+  /* Neutrals */
+  --white: #eeeef2;
+  --muted: #7a7a88;
+  --muted-light: #55555f;
+  --danger: #e05555;
+  --danger-dim: rgba(224, 85, 85, 0.12);
+
+  /* ---- Cores por categoria: fria → quente ---- */
+  --cat-aquecimento:     #E8E07B;  /* Amarelo suave — mais leve */
+  --cat-aquecimento-dim: rgba(232, 224, 123, 0.12);
+  --cat-aquecimento-glow: rgba(232, 224, 123, 0.06);
+
+  --cat-preliminares:     #C9B8E8;  /* Lavender */
+  --cat-preliminares-dim: rgba(201, 184, 232, 0.12);
+  --cat-preliminares-glow: rgba(201, 184, 232, 0.06);
+
+  --cat-masturbacao:     #B8A0D8;  /* Purple médio */
+  --cat-masturbacao-dim: rgba(184, 160, 216, 0.14);
+  --cat-masturbacao-glow: rgba(184, 160, 216, 0.06);
+
+  --cat-oral:            #E8825C;  /* Coral — esquentando */
+  --cat-oral-dim:        rgba(232, 130, 92, 0.12);
+  --cat-oral-glow:       rgba(232, 130, 92, 0.06);
+
+  --cat-submissao:       #E06040;  /* Laranja-vermelho */
+  --cat-submissao-dim:   rgba(224, 96, 64, 0.12);
+  --cat-submissao-glow:  rgba(224, 96, 64, 0.06);
+
+  --cat-pesado:          #E04040;  /* Vermelho — mais pesado */
+  --cat-pesado-dim:      rgba(224, 64, 64, 0.12);
+  --cat-pesado-glow:     rgba(224, 64, 64, 0.06);
+
+  /* Sizing */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* Transitions */
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--white);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- App Container ---------- */
+.app {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 16px 20px 120px;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* ---------- Botão Voltar (minimalista, flutuante) ---------- */
+.back-btn {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  z-index: 100;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--white);
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  padding: 0;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: scale(1.05);
+}
+
+.back-btn.visible {
+  display: flex;
+}
+
+/* ---------- Typography Helpers ---------- */
+.titan-font {
+  font-family: 'Titan One', cursive;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+/* ---------- Title (Home) ---------- */
+.title {
+  font-family: 'Titan One', cursive;
+  text-align: center;
+  color: var(--primary);
+  font-size: 32px;
+  line-height: 1.1;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  text-shadow: 0 0 60px rgba(201, 184, 232, 0.15);
+}
+
+/* ---------- Screen Containers ---------- */
+.screen { display: none; }
+.screen.active { display: block; animation: fadeIn 0.35s ease; }
+
+#screenHome.active {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  min-height: calc(100vh - 40px);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Screen Title (replaces header) ---------- */
+.screen-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 20px 0;
+  padding-top: 8px;
+  text-align: center;
+  color: var(--white);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  background: var(--primary);
+  color: #111114;
+  padding: 16px 32px;
+  border-radius: var(--radius-pill);
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  min-width: 240px;
+  cursor: pointer;
+  transition: var(--transition);
+  letter-spacing: -0.01em;
+}
+
+.btn:hover {
+  background: var(--primary-strong);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px rgba(201, 184, 232, 0.2);
+}
+
+.btn:active { transform: translateY(0); box-shadow: none; }
+
+.btn.ghost {
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--white);
+}
+
+.btn.ghost:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: none;
+  transform: none;
+}
+
+.small {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--primary-dim);
+  color: var(--primary);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.small:hover { background: rgba(201, 184, 232, 0.22); }
+
+/* ---------- Layout Wrappers ---------- */
+.home-buttons-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+.config-buttons-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100vh - 180px);
+}
+
+.main-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  margin-top: 16px;
+}
+
+/* ---------- Cards (base) ---------- */
+.card {
+  background: var(--card);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  color: var(--white);
+  border: 1px solid var(--border-light);
+  transition: var(--transition);
+}
+
+.card:hover {
+  background: var(--card-hover);
+  border-color: var(--border);
+}
+
+/* ---------- Player Card ---------- */
+.player-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--primary-dim);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+
+.player-info { display: flex; gap: 12px; align-items: center; }
+.player-name { font-weight: 600; font-size: 15px; }
+.player-details { color: var(--muted); font-size: 12px; margin-top: 2px; }
+.player-actions { display: flex; gap: 4px; align-items: center; }
+
+/* ---------- Challenge Card ---------- */
+.challenge-card {
+  border-radius: var(--radius-md);
+  padding: 16px;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid transparent;
+}
+
+/* Cores de fundo sólidas e texto contrastante */
+.challenge-card[data-cat="aquecimento"]  { background: var(--cat-aquecimento); color: #111114; }
+.challenge-card[data-cat="preliminares"] { background: var(--cat-preliminares); color: #111114; }
+.challenge-card[data-cat="masturbacao"]  { background: var(--cat-masturbacao); color: #111114; }
+.challenge-card[data-cat="oral"]         { background: var(--cat-oral); color: #111114; }
+.challenge-card[data-cat="submissao"]    { background: var(--cat-submissao); color: #ffffff; }
+.challenge-card[data-cat="pesado"]       { background: var(--cat-pesado); color: #ffffff; }
+
+/* Hover scale + glow */
+.challenge-card:hover { transform: translateY(-2px); }
+.challenge-card[data-cat="aquecimento"]:hover  { box-shadow: 0 8px 24px rgba(232, 224, 123, 0.25); }
+.challenge-card[data-cat="preliminares"]:hover { box-shadow: 0 8px 24px rgba(201, 184, 232, 0.25); }
+.challenge-card[data-cat="masturbacao"]:hover  { box-shadow: 0 8px 24px rgba(184, 160, 216, 0.25); }
+.challenge-card[data-cat="oral"]:hover         { box-shadow: 0 8px 24px rgba(232, 130, 92, 0.25); }
+.challenge-card[data-cat="submissao"]:hover    { box-shadow: 0 8px 24px rgba(224, 96, 64, 0.25); }
+.challenge-card[data-cat="pesado"]:hover       { box-shadow: 0 8px 24px rgba(224, 64, 64, 0.25); }
+
+.challenge-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.challenge-card-text {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.5;
+  color: inherit;
+  flex: 1;
+}
+
+.challenge-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+/* Icon button inherit color */
+.challenge-card .icon-btn { color: inherit; opacity: 0.6; }
+.challenge-card .icon-btn:hover { background: rgba(0,0,0,0.1); opacity: 1; }
+.challenge-card[data-cat="submissao"] .icon-btn:hover,
+.challenge-card[data-cat="pesado"] .icon-btn:hover { background: rgba(255,255,255,0.15); }
+
+/* Badge genérico de categoria */
+.challenge-category-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Badges nas categorias (quando numa lista normal, não no card) */
+.cat-aquecimento   { background: var(--cat-aquecimento-dim); color: var(--cat-aquecimento); }
+.cat-preliminares  { background: var(--cat-preliminares-dim); color: var(--cat-preliminares); }
+.cat-masturbacao   { background: var(--cat-masturbacao-dim); color: var(--cat-masturbacao); }
+.cat-oral          { background: var(--cat-oral-dim); color: var(--cat-oral); }
+.cat-submissao     { background: var(--cat-submissao-dim); color: var(--cat-submissao); }
+.cat-pesado        { background: var(--cat-pesado-dim); color: var(--cat-pesado); }
+
+/* Porém, NO CARD, o badge é invertido/acoplado */
+.challenge-card .challenge-category-badge,
+.challenge-card .challenge-gender-badge {
+  background: rgba(0, 0, 0, 0.12);
+  color: inherit;
+}
+
+.challenge-card[data-cat="submissao"] .challenge-category-badge,
+.challenge-card[data-cat="submissao"] .challenge-gender-badge,
+.challenge-card[data-cat="pesado"] .challenge-category-badge,
+.challenge-card[data-cat="pesado"] .challenge-gender-badge {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.challenge-gender-badge {
+  display: inline-flex;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 10px;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+}
+
+/* Challenges grid */
+.challenges-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+/* ---------- Lists ---------- */
+.list { display: flex; flex-direction: column; gap: 8px; }
+
+/* ---------- Section Header ---------- */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.section-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.section-header-actions { display: flex; gap: 8px; align-items: center; }
+
+/* ---------- Muted ---------- */
+.muted { color: var(--muted); font-size: 13px; }
+
+/* ---------- Forms ---------- */
+.form-row { display: flex; flex-direction: column; gap: 10px; }
+.form-row label { font-size: 13px; font-weight: 500; color: var(--muted); }
+
+input[type=text], select, textarea {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--white);
+  font-family: inherit;
+  font-size: 14px;
+  transition: var(--transition);
+  outline: none;
+}
+
+input[type=text]:focus, select:focus, textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-dim);
+}
+
+textarea { resize: vertical; min-height: 80px; }
+
+.select-white {
+  background: var(--bg);
+  color: var(--white);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+}
+
+.select-white:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-dim); }
+
+input[type=checkbox] { accent-color: var(--primary); width: 16px; height: 16px; cursor: pointer; }
+input[type=radio] { accent-color: var(--primary); cursor: pointer; }
+
+/* ---------- Switch ---------- */
+.switch {
+  width: 44px; height: 26px; border-radius: 20px;
+  background: var(--primary); position: relative; flex: 0 0 44px;
+  cursor: pointer; transition: var(--transition);
+}
+.switch.off { background: rgba(255, 255, 255, 0.10); }
+.switch .knob {
+  position: absolute; left: 3px; top: 3px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: white; transition: var(--transition);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+.switch.on .knob { left: 21px; }
+
+/* ---------- Icon Buttons ---------- */
+.icon-btn {
+  background: transparent; border: 0; color: var(--muted);
+  cursor: pointer; padding: 6px; border-radius: var(--radius-sm);
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.icon-btn:hover { background: rgba(255, 255, 255, 0.06); color: var(--white); }
+.icon-btn * { pointer-events: none; }
+
+/* ---------- Footer ---------- */
+footer {
+  position: fixed; left: 0; bottom: 0; width: 100%;
+  padding: 14px 0; text-align: center; color: var(--muted-light);
+  font-size: 11px; background: linear-gradient(to top, var(--bg) 60%, transparent);
+  pointer-events: none;
+}
+
+/* ---------- Modals ---------- */
+.modal-close-x {
+  position: absolute; right: 12px; top: 10px;
+  background: transparent; border: 0; color: var(--muted);
+  font-size: 18px; cursor: pointer; padding: 6px;
+  border-radius: var(--radius-sm); transition: var(--transition);
+  width: 32px; height: 32px; display: flex;
+  align-items: center; justify-content: center;
+}
+.modal-close-x:hover { color: var(--white); background: rgba(255, 255, 255, 0.06); }
+
+.modal-content {
+  position: relative; background: var(--bg-surface);
+  padding: 24px; border-radius: var(--radius-lg);
+  min-width: 340px; max-width: 90vw; color: var(--white);
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+}
+
+.modal-content h3 { margin: 0 0 16px 0; font-size: 18px; font-weight: 600; }
+.modal-actions-right { display: flex; gap: 8px; justify-content: flex-end; align-items: center; margin-top: 16px; }
+
+.insert-btn {
+  background: var(--cat-aquecimento-dim); border: none;
+  padding: 8px 14px; border-radius: var(--radius-sm);
+  color: var(--cat-aquecimento); cursor: pointer;
+  font-size: 12px; font-weight: 600; transition: var(--transition);
+}
+.insert-btn:hover { background: rgba(232, 224, 123, 0.22); }
+
+.danger {
+  background: var(--danger-dim); border: none; color: var(--danger);
+  padding: 10px 16px; border-radius: var(--radius-sm);
+  cursor: pointer; font-size: 13px; font-weight: 600; transition: var(--transition);
+}
+.danger:hover { background: rgba(224, 85, 85, 0.22); }
+
+.btn-primary-small {
+  background: var(--primary); color: #111114; border: none;
+  padding: 10px 18px; border-radius: var(--radius-sm);
+  cursor: pointer; font-size: 13px; font-weight: 600; transition: var(--transition);
+}
+.btn-primary-small:hover { background: var(--primary-strong); }
+
+/* ---------- Players Container ---------- */
+.players-container { display: flex; flex-direction: column; gap: 12px; }
+.players-list-wrap { flex: 1; min-height: 80px; }
+.btn-play-duplicate { min-width: 240px; padding: 16px 32px; border-radius: var(--radius-pill); font-size: 16px; }
+
+/* ---------- Fade ---------- */
+.fade { transition: opacity var(--transition-slow); opacity: 1; }
+.hidden { opacity: 0; pointer-events: none; }
+
+/* =========================================
+   PLAY SCREEN — Cores dinâmicas por categoria
+   ========================================= */
+
+#resultArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 200px);
+}
+
+/* Result card — base */
+.result-card {
+  max-width: 400px;
+  width: 100%;
+  margin: 20px auto;
+  padding: 36px 24px;
+  border-radius: var(--radius-lg);
+  text-align: center;
+  transition: background 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Category-colored result cards matching the solid color approach */
+.result-card {
+  background: var(--result-cat-color, var(--card));
+  color: var(--result-cat-text, #111114);
+  box-shadow: 0 4px 40px var(--result-cat-glow, rgba(0,0,0,0.3));
+}
+
+.result-actor {
+  font-weight: 400; /* Removido o bold para seguir design */
+  font-size: 26px;
+  margin-bottom: 6px;
+  color: inherit;
+}
+
+.result-text {
+  color: inherit;
+  opacity: 0.9;
+  margin-bottom: 24px;
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.sort-button-large {
+  background: var(--result-cat-text, #111114);
+  color: var(--result-cat-color, var(--card));
+  padding: 14px 44px;
+  border-radius: var(--radius-pill);
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.sort-button-large:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  filter: brightness(1.1);
+}
+
+/* Category pill (play screen) */
+.category-pill {
+  display: inline-block;
+  padding: 6px 18px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 8px;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--result-cat-dim, var(--primary-dim));
+  color: var(--result-cat-color, var(--primary));
+  transition: var(--transition);
+}
+
+/* Play Screen Timer Container */
+.play-timer-container {
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto 20px auto;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  text-align: center;
+  background: var(--result-cat-dim, rgba(255,255,255,0.05));
+  border: 1px solid var(--result-cat-color, var(--primary));
+  box-shadow: 0 4px 20px var(--result-cat-glow, rgba(0,0,0,0.1));
+  color: var(--result-cat-color, var(--primary));
+  transition: var(--transition-slow);
+}
+
+.play-timer-display {
+  font-size: 36px;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 10px var(--result-cat-glow, rgba(0,0,0,0.2));
+}
+
+/* ---------- Countdown ---------- */
+#countdownOverlay {
+  position: fixed; inset: 0; display: none;
+  align-items: center; justify-content: center;
+  pointer-events: none; z-index: 3000; background: var(--bg);
+}
+
+.count-number {
+  font-size: 120px; font-weight: 800;
+  color: var(--primary); opacity: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+
+@keyframes pulseScale {
+  0% { transform: scale(0.8); opacity: 0; }
+  20% { transform: scale(1.05); opacity: 1; }
+  60% { transform: scale(0.95); opacity: 1; }
+  100% { transform: scale(0.6); opacity: 0; }
+}
+.count-number.pulse { animation: pulseScale 1s ease-in-out forwards; }
+
+.countdown-active .app { visibility: hidden !important; pointer-events: none !important; }
+.countdown-active #overlay, .countdown-active #modal { display: none !important; }
+.countdown-active .count-number { visibility: visible; }
+
+/* ---------- Next Level Bar ---------- */
+.next-level-bar {
+  position: fixed; left: 0; right: 0; bottom: 40px;
+  padding: 8px 16px; display: none; justify-content: center; z-index: 2000;
+}
+
+.next-level-btn {
+  background: var(--bg-surface); color: var(--white);
+  padding: 12px 28px; border-radius: var(--radius-pill);
+  border: 1.5px solid var(--border); cursor: pointer;
+  font-weight: 600; font-size: 14px; transition: var(--transition);
+}
+
+.next-level-btn:hover { background: var(--card); border-color: var(--primary); color: var(--primary); }
+.next-level-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.weight-badge {
+  background: rgba(255, 255, 255, 0.04); padding: 3px 8px;
+  border-radius: var(--radius-pill); font-size: 11px; margin-left: 8px; color: var(--muted);
+}
+
+/* ========================================
+   Responsivo
+   ======================================== */
+
+@media (max-width: 420px) {
+  .app { padding: 12px 14px 110px; }
+  .title { font-size: 30px; margin-top: 50px; }
+  .btn { min-width: 200px; font-size: 15px; padding: 14px 24px; }
+  .result-card { padding: 28px 16px; }
+  .result-actor { font-size: 22px; }
+  .result-text { font-size: 14px; }
+  .count-number { font-size: 84px; }
+  .modal-content { min-width: auto; width: calc(100vw - 32px); padding: 20px 16px; }
+  .back-btn { top: 12px; left: 12px; width: 36px; height: 36px; }
+}
+
+@media (min-width: 520px) {
+  .app { margin-top: 12px; }
+}
+
+@media (min-width: 768px) {
+  .app { max-width: 720px; padding: 24px 32px 120px; }
+  .challenges-grid { grid-template-columns: 1fr 1fr; }
+  .title { font-size: 46px; }
+  .result-card { padding: 44px 32px; }
+  .modal-content { min-width: 420px; }
+}
+
+@media (min-width: 1024px) {
+  .app { max-width: 860px; }
+  .challenges-grid { grid-template-columns: 1fr 1fr 1fr; }
+}
