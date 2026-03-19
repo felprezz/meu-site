@@ -13,6 +13,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Brincadeiras Gostosas</title>
 <meta name="description" content="App de desafios e brincadeiras para casais — offline, sem registro, privativo.">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#111114">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Pacifico&family=Titan+One&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -27,6 +31,14 @@
 
   <!-- HOME -->
   <div id="screenHome" class="screen active">
+    <!-- Botão de Compartilhar -->
+    <button id="btnShare" aria-label="Compartilhar App" style="position:absolute; top:18px; right:18px; z-index:100; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.06); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.08); color:var(--white); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background 0.2s, transform 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'; this.style.transform='scale(1.05)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'; this.style.transform='none'">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <polyline points="16 6 12 2 8 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="12" y1="2" x2="12" y2="15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
     <!-- Quebra de linha manual sugerida pelo usuário -->
     <div class="title">Brincadeiras<br>Gostosas</div>
     <div class="home-buttons-wrap">
@@ -65,8 +77,6 @@
         <button id="cfg_players" class="btn ghost">Jogadores</button>
         <button id="cfg_challenges" class="btn ghost">Desafios</button>
         <button id="cfg_timer" class="btn ghost">Cronômetro</button>
-        <button id="cfg_export" class="btn ghost">Exportar</button>
-        <button id="cfg_import" class="btn ghost">Importar</button>
         <button id="cfg_reset" class="btn ghost">Resetar configurações</button>
       </div>
     </div>
@@ -91,7 +101,8 @@
     <div class="section-header">
       <h2>Desafios</h2>
       <div class="section-header-actions">
-        <button id="importChallengesBtn" class="small" title="Importar CSV">Importar</button>
+        <button id="exportChallengesBtn" class="small" title="Exportar Dados">Exportar</button>
+        <button id="importChallengesBtn" class="small" title="Importar CSV ou JSON">Importar</button>
         <button id="addChallengeBtn" class="small">+ Desafio</button>
       </div>
     </div>
@@ -138,8 +149,7 @@
   </div>
 </div>
 
-<input id="hiddenCsvInput" type="file" accept=".csv" style="display:none" />
-<input id="hiddenJsonInput" type="file" accept=".json" style="display:none" />
+<input id="hiddenCsvInput" type="file" accept=".csv,.json" style="display:none" />
 <div id="overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:1000;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)"></div>
 <div id="modal" style="display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1010"></div>
 

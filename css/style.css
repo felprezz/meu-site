@@ -727,7 +727,26 @@ footer {
 }
 
 @media (min-width: 768px) {
-  .app { max-width: 720px; padding: 24px 32px 0; }
+  html, body {
+    height: auto;
+    overflow-y: auto;
+  }
+  .app { 
+    max-width: 720px; 
+    margin-top: 0;
+    padding: 36px 32px 0; 
+    min-height: 100dvh;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+  #screenPlayers.active, 
+  #screenChallenges.active, 
+  #screenCategories.active, 
+  #screenTimerSettings.active,
+  #screenConfig.active {
+    overflow-y: visible;
+  }
   .challenges-grid { grid-template-columns: 1fr 1fr; }
   .title { font-size: 46px; }
   .result-card { padding: 44px 32px; }

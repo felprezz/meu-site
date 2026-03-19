@@ -20,12 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnPlayFromPlayers = document.getElementById('btnPlayFromPlayers');
   const btnBack = document.getElementById('btnBack');
   const btnNextLevel = document.getElementById('btnNextLevel');
+  const btnShare = document.getElementById('btnShare');
   const countdownOverlay = document.getElementById('countdownOverlay');
   const countNumber = document.getElementById('countNumber');
   const resultArea = document.getElementById('resultArea');
   const btnAgain = document.getElementById('btnAgain');
   const hiddenCsvInput = document.getElementById('hiddenCsvInput');
-  const hiddenJsonInput = document.getElementById('hiddenJsonInput');
 
   // Elementos do Timer
   const cfgTimerActive = document.getElementById('cfgTimerActive');
@@ -163,6 +163,30 @@ document.addEventListener('DOMContentLoaded', () => {
     goBack();
   });
   
+  if (btnShare) {
+    btnShare.addEventListener('click', async () => {
+      const url = window.location.origin + window.location.pathname;
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: 'Brincadeiras Gostosas',
+            text: 'Descubra este app de desafios e brincadeiras para casais — offline e privativo!',
+            url: url
+          });
+        } catch (err) {
+          console.log('Compartilhamento cancelado ou falhou', err);
+        }
+      } else {
+        try {
+          await navigator.clipboard.writeText(url);
+          alert('Link copiado para a área de transferência!');
+        } catch (err) {
+          alert('Não foi possível copiar o link.');
+        }
+      }
+    });
+  }
+  
   btnPlayHome.addEventListener('click', () => startCountdownThenPlay());
   if (btnPlayFromPlayers) btnPlayFromPlayers.addEventListener('click', () => startCountdownThenPlay());
   document.getElementById('btnConfig').addEventListener('click', () => { showScreen('config'); renderAll(); });
@@ -234,8 +258,8 @@ document.addEventListener('DOMContentLoaded', () => {
   cfgTimerMin.addEventListener('input', updateTimerSettings);
   cfgTimerSec.addEventListener('input', updateTimerSettings);
 
-  // Config: Exportar JSON
-  document.getElementById('cfg_export').addEventListener('click', () => {
+  // Desafios: Exportar JSON
+  document.getElementById('exportChallengesBtn').addEventListener('click', () => {
     const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -245,59 +269,57 @@ document.addEventListener('DOMContentLoaded', () => {
     URL.revokeObjectURL(url);
   });
 
-  // Config: Importar JSON
-  document.getElementById('cfg_import').addEventListener('click', () => hiddenJsonInput.click());
-  hiddenJsonInput.addEventListener('change', (ev) => {
-    const f = ev.target.files[0];
-    if (!f) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-      try {
-        const obj = JSON.parse(e.target.result);
-        if (!obj || !Array.isArray(obj.players) || !Array.isArray(obj.challenges)) {
-          alert('JSON inválido: deve conter arrays "players" e "challenges".');
-          hiddenJsonInput.value = '';
-          return;
-        }
-        if (!confirm('Importar o JSON irá SUBSTITUIR o estado atual. Deseja continuar?')) {
-          hiddenJsonInput.value = '';
-          return;
-        }
-        state.players = obj.players.map(p => Object.assign({
-          id: p.id || uid('p'), name: p.name || 'Jogador',
-          gender: p.gender || 'M', orientation: p.orientation || 'hetero',
-          active: (typeof p.active !== 'undefined' ? p.active : true)
-        }, p));
-        state.challenges = obj.challenges.map(c => Object.assign({
-          id: c.id || uid('c'), text: c.text || c.desafio || 'Desafio',
-          category: c.category || DEFAULT_CATEGORIES[1],
-          actorGender: c.actorGender || 'any', targetGender: c.targetGender || 'any',
-          allowSelf: !!c.allowSelf, weight: (typeof c.weight !== 'undefined' ? c.weight : 2)
-        }, c));
-        state.categories = Array.isArray(obj.categories) && obj.categories.length
-          ? obj.categories : DEFAULT_CATEGORIES.slice();
-        state.nextActorIndex = 0;
-        state.currentCategoryIndex = 0;
-        state.categoryDecks = {};
-        saveState(); renderAll(); alert('Importação concluída.');
-      } catch (err) {
-        console.error(err);
-        alert('Erro lendo o arquivo JSON.');
-      } finally {
-        hiddenJsonInput.value = '';
-      }
-    };
-    reader.readAsText(f);
-  });
-
-  // Config: Importar CSV de desafios
+  // Desafios: Importar CSV ou JSON
   document.getElementById('importChallengesBtn').addEventListener('click', () => hiddenCsvInput.click());
   hiddenCsvInput.addEventListener('change', (ev) => {
     const f = ev.target.files[0];
     if (!f) return;
     const name = f.name.toLowerCase();
+    
+    if (name.endsWith('.json')) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const obj = JSON.parse(e.target.result);
+          if (!obj || !Array.isArray(obj.players) || !Array.isArray(obj.challenges)) {
+            alert('JSON inválido: deve conter arrays "players" e "challenges".');
+            hiddenCsvInput.value = '';
+            return;
+          }
+          if (!confirm('Importar o JSON irá SUBSTITUIR o estado atual. Deseja continuar?')) {
+            hiddenCsvInput.value = '';
+            return;
+          }
+          state.players = obj.players.map(p => Object.assign({
+            id: p.id || uid('p'), name: p.name || 'Jogador',
+            gender: p.gender || 'M', orientation: p.orientation || 'hetero',
+            active: (typeof p.active !== 'undefined' ? p.active : true)
+          }, p));
+          state.challenges = obj.challenges.map(c => Object.assign({
+            id: c.id || uid('c'), text: c.text || c.desafio || 'Desafio',
+            category: c.category || DEFAULT_CATEGORIES[1],
+            actorGender: c.actorGender || 'any', targetGender: c.targetGender || 'any',
+            allowSelf: !!c.allowSelf, weight: (typeof c.weight !== 'undefined' ? c.weight : 2)
+          }, c));
+          state.categories = Array.isArray(obj.categories) && obj.categories.length
+            ? obj.categories : DEFAULT_CATEGORIES.slice();
+          state.nextActorIndex = 0;
+          state.currentCategoryIndex = 0;
+          state.categoryDecks = {};
+          saveState(); renderAll(); alert('Importação concluída.');
+        } catch (err) {
+          console.error(err);
+          alert('Erro lendo o arquivo JSON.');
+        } finally {
+          hiddenCsvInput.value = '';
+        }
+      };
+      reader.readAsText(f);
+      return;
+    }
+
     if (!name.endsWith('.csv')) {
-      alert('Selecione um arquivo .csv');
+      alert('Selecione um arquivo .csv ou .json');
       hiddenCsvInput.value = '';
       return;
     }
@@ -391,5 +413,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- Render inicial ---------- */
   renderAll();
+
+  /* ---------- Service Worker Registro ---------- */
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').then((reg) => {
+        console.log('SW registrado com sucesso', reg.scope);
+      }).catch((err) => {
+        console.warn('Erro ao registrar SW', err);
+      });
+    });
+  }
 
 }); // DOMContentLoaded
