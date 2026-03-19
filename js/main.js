@@ -1,6 +1,6 @@
 /* ========== Main — Ponto de Entrada ========== */
 
-import { uid, inferCategoryFromText, mapPortugueseGender } from './utils.js';
+import { uid, inferCategoryFromText, mapPortugueseGender, STORAGE_KEY } from './utils.js';
 import { DEFAULT_CATEGORIES } from './data.js';
 import { state, saveState, initState } from './state.js';
 import { pickRound, initDeckForCategory } from './game.js';
