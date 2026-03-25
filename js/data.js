@@ -63,4 +63,9 @@ export const BUILTIN_CHALLENGES = [
   { "text": "Fique em pé se masturbando enquanto {player} lambe seus testículos ajoelhada", "category": "Oral", "actorGender": "M", "targetGender": "any", "allowSelf": false, "weight": 2 },
   { "text": "Fique sentado enquanto {player} monta no seu colo para se esfregar em você", "category": "Preliminares", "actorGender": "M", "targetGender": "any", "allowSelf": false, "weight": 2 },
   { "text": "Fique em pé enquanto {player} te chupa", "category": "Oral", "actorGender": "M", "targetGender": "any", "allowSelf": false, "weight": 2 },
+  { "text": "Fale no ouvido da(o) {player} como você chamaria ela(e) na cama", "category": "Aquecimento", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2 },
+  { "text": "Prenda a(o) {player} contra a parede ou chão e beije o pescoço", "category": "Aquecimento", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2 },
+  { "text": "Sussurre no ouvido da(o) {player}, em detalhes, o que você imagina fazer com ele. Sem filtro.", "category": "Preliminares", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2 },
+  { "text": "Fique deitado(a), enquanto {player} se masturba bem próximo do seu rosto. Você só pode olhar, sem encostar", "category": "Masturbação", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2 },
+  { "text": "Aperte o pescoço da {player} para beija-la", "category": "Aquecimento", "actorGender": "any", "targetGender": "M", "allowSelf": false, "weight": 2 },
 ];
