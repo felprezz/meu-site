@@ -29,7 +29,6 @@ export const BUILTIN_CHALLENGES = [
   { "text": "Masturbe o(a) {player} por cima da roupa", "category": "Aquecimento", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2 },
   { "text": "Masturbe o {player} com seus peitos", "category": "Masturbação", "actorGender": "F", "targetGender": "M", "allowSelf": false, "weight": 2 },
   { "text": "Masturbe o {player} com seus pés", "category": "Masturbação", "actorGender": "F", "targetGender": "any", "allowSelf": false, "weight": 2 },
-  { "text": "Se masturbe com os pés da {player}", "category": "Masturbação", "actorGender": "any", "targetGender": "F", "allowSelf": false, "weight": 2 },
   { "text": "Acaricie o pênis do {player}", "category": "Masturbação", "actorGender": "any", "targetGender": "M", "allowSelf": false, "weight": 2 },
   { "text": "Penetre a {player} com os dedos", "category": "Masturbação", "actorGender": "any", "targetGender": "F", "allowSelf": false, "weight": 2 },
   { "text": "Masturbe o(a) {player} com suas mãos", "category": "Masturbação", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2 },
