@@ -7,7 +7,7 @@ import { pickRound, initDeckForCategory } from './game.js';
 import {
   showScreen, goBack, renderAll, renderResult,
   renderChallenges, openPlayerModal, openChallengeModal,
-  updateCurrentCategoryPill, historyStack
+  updateCurrentCategoryPill, historyStack, openToysSelectionModal
 } from './ui.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -187,8 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   
-  btnPlayHome.addEventListener('click', () => startCountdownThenPlay());
-  if (btnPlayFromPlayers) btnPlayFromPlayers.addEventListener('click', () => startCountdownThenPlay());
+  btnPlayHome.addEventListener('click', () => openToysSelectionModal(startCountdownThenPlay));
+  if (btnPlayFromPlayers) btnPlayFromPlayers.addEventListener('click', () => openToysSelectionModal(startCountdownThenPlay));
   document.getElementById('btnConfig').addEventListener('click', () => { showScreen('config'); renderAll(); });
 
   // Próximo nível
@@ -241,6 +241,13 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('cfg_timer').addEventListener('click', () => showScreen('timerSettings'));
   document.getElementById('addPlayerBtn').addEventListener('click', () => openPlayerModal());
   document.getElementById('addChallengeBtn').addEventListener('click', () => openChallengeModal());
+
+  const challengeCategoryFilter = document.getElementById('challengeCategoryFilter');
+  if (challengeCategoryFilter) {
+    challengeCategoryFilter.addEventListener('change', () => {
+      renderChallenges();
+    });
+  }
 
   // Config: Cronômetro Bindings
   cfgTimerActive.checked = state.timerEnabled;

@@ -1,6 +1,12 @@
 /* ========== Constantes ========== */
 export const STORAGE_KEY = 'desafios_eroticos_v1';
 
+export const TOY_OPTIONS = [
+  { id: 'venda', name: 'Venda' },
+  { id: 'algema', name: 'Algema/Corda' },
+  { id: 'vibrador', name: 'Vibrador' }
+];
+
 /* ========== Funções auxiliares puras ========== */
 
 export function uid(pref = 'id') {

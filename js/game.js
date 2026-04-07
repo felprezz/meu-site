@@ -26,6 +26,16 @@ export function challengeCompatible(ch, actor, target) {
   if (ch.actorGender && ch.actorGender !== 'any' && ch.actorGender !== actor.gender) return false;
   if (ch.targetGender && ch.targetGender !== 'any' && ch.targetGender !== target.gender) return false;
   if (!ch.allowSelf && actor.id === target.id) return false;
+  
+  if (Array.isArray(ch.toys) && ch.toys.length > 0) {
+    const availToys = Array.isArray(state.selectedToys) ? state.selectedToys : [];
+    for (let i = 0; i < ch.toys.length; i++) {
+      if (!availToys.includes(ch.toys[i])) {
+        return false;
+      }
+    }
+  }
+
   return true;
 }
 

@@ -13,7 +13,8 @@ export let state = {
   // Timer config
   timerEnabled: true,
   timerMinutes: 1,
-  timerSeconds: 0
+  timerSeconds: 0,
+  selectedToys: []
 };
 
 export function saveState() {
@@ -41,6 +42,7 @@ export function initState() {
       state.nextActorIndex = 0;
       state.currentCategoryIndex = 0;
       state.categoryDecks = {};
+      state.selectedToys = [];
     }
   }
 

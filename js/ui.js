@@ -1,6 +1,6 @@
 /* ========== UI: Renderização, Modais, Navegação ========== */
 
-import { escapeHtml, uid, insertAtCursor, unifyArticlesForPlayerPlaceholders } from './utils.js';
+import { escapeHtml, uid, insertAtCursor, unifyArticlesForPlayerPlaceholders, TOY_OPTIONS } from './utils.js';
 import { DEFAULT_CATEGORIES } from './data.js';
 import { state, saveState } from './state.js';
 
@@ -258,10 +258,34 @@ export function openPlayerModal(player) {
   });
 }
 
+export function updateChallengeFilterOptions() {
+  const select = document.getElementById('challengeCategoryFilter');
+  if (!select) return;
+  const currentVal = select.value;
+  select.innerHTML = '<option value="all">Todas as Categorias</option>';
+  (state.categories || []).forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    select.appendChild(opt);
+  });
+  if (state.categories.includes(currentVal)) {
+    select.value = currentVal;
+  } else {
+    select.value = 'all';
+  }
+}
+
 /* ---------- Renderizar Desafios (CARDS) ---------- */
 export function renderChallenges() {
+  const filterSelect = document.getElementById('challengeCategoryFilter');
+  const activeCategoryFilter = filterSelect ? filterSelect.value : 'all';
+
   challengesList.innerHTML = '';
   state.challenges.forEach(ch => {
+    if (activeCategoryFilter !== 'all' && ch.category !== activeCategoryFilter) {
+      return;
+    }
     const catKey = normalizeCategoryKey(ch.category);
     const card = document.createElement('div');
     card.className = 'challenge-card';
@@ -291,6 +315,20 @@ export function renderChallenges() {
       badge.className = 'challenge-gender-badge';
       badge.textContent = `${genderLabel(ch.targetGender)} Recebe`;
       meta.appendChild(badge);
+    }
+
+    if (ch.toys && ch.toys.length > 0) {
+      ch.toys.forEach(toyId => {
+        const toyDef = TOY_OPTIONS.find(t => t.id === toyId);
+        if (toyDef) {
+          const badge = document.createElement('span');
+          badge.className = 'challenge-gender-badge';
+          badge.style.background = 'rgba(232, 130, 92, 0.15)';
+          badge.style.color = '#E8825C';
+          badge.textContent = toyDef.name;
+          meta.appendChild(badge);
+        }
+      });
     }
 
     const header = document.createElement('div');
@@ -337,6 +375,12 @@ export function openChallengeModal(ch) {
       </div>
       <label>Categoria</label>
       <div id="ch_category_container"></div>
+      
+      <div style="margin-top:12px">
+        <label>Brinquedos Necessários</label>
+        <div id="ch_toys_container" style="display:flex;gap:12px;margin-top:6px;flex-wrap:wrap;"></div>
+      </div>
+
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
         <button id="ch_insert_player" class="insert-btn">{player}</button>
         <div class="modal-actions-right" style="margin-top:0">
@@ -368,6 +412,20 @@ export function openChallengeModal(ch) {
     sel.value = state.categories[0] || '';
   }
 
+  const toysContainer = document.getElementById('ch_toys_container');
+  const activeToys = isEdit && ch.toys ? ch.toys : [];
+  TOY_OPTIONS.forEach(toy => {
+    const lbl = document.createElement('label');
+    lbl.style = 'display:flex;align-items:center;gap:4px;cursor:pointer;font-size:13px;';
+    const chk = document.createElement('input');
+    chk.type = 'checkbox';
+    chk.value = toy.id;
+    if (activeToys.includes(toy.id)) chk.checked = true;
+    lbl.appendChild(chk);
+    lbl.appendChild(document.createTextNode(' ' + toy.name));
+    toysContainer.appendChild(lbl);
+  });
+
   const textarea = document.getElementById('ch_text');
   document.getElementById('ch_insert_player').addEventListener('click', (ev) => { ev.preventDefault(); insertAtCursor(textarea, '{player}'); });
 
@@ -376,12 +434,15 @@ export function openChallengeModal(ch) {
     const category = (sel && sel.value) ? sel.value.trim() : DEFAULT_CATEGORIES[1];
     const actorGender = (document.querySelector('input[name="actor_sel"]:checked') || {}).value || 'any';
     const targetGender = (document.querySelector('input[name="target_sel"]:checked') || {}).value || 'any';
+    const selectedToys = [];
+    toysContainer.querySelectorAll('input[type="checkbox"]:checked').forEach(c => selectedToys.push(c.value));
+
     if (!text) { alert('Texto é obrigatório'); return; }
     if (isEdit) {
-      ch.text = text; ch.category = category; ch.actorGender = actorGender; ch.targetGender = targetGender; ch.allowSelf = false;
+      ch.text = text; ch.category = category; ch.actorGender = actorGender; ch.targetGender = targetGender; ch.allowSelf = false; ch.toys = selectedToys;
       if (typeof ch.weight === 'undefined') ch.weight = 2;
     } else {
-      state.challenges.push({ id: uid('c'), text, category, actorGender, targetGender, allowSelf: false, weight: 2 });
+      state.challenges.push({ id: uid('c'), text, category, actorGender, targetGender, allowSelf: false, weight: 2, toys: selectedToys });
     }
     state.categoryDecks = {};
     saveState(); closeModal(); renderChallenges();
@@ -399,6 +460,7 @@ export function openChallengeModal(ch) {
 
 /* ---------- Renderizar Categorias ---------- */
 export function renderCategories() {
+  updateChallengeFilterOptions();
   categoriesList.innerHTML = '';
   state.categories.forEach((c, i) => {
     const card = document.createElement('div');
@@ -439,4 +501,44 @@ export function renderAll() {
   renderChallenges();
   renderCategories();
   updateCurrentCategoryPill();
+}
+
+/* ---------- Modal de Seleção de Brinquedos ---------- */
+export function openToysSelectionModal(onConfirm) {
+  const html = `
+    <button id="toys_close_x" class="modal-close-x" aria-label="Fechar">✕</button>
+    <h3>Quais desses brinquedos você tem disponível?</h3>
+    <div id="toys_selection_container" class="form-row" style="margin-top:16px;"></div>
+    <div class="modal-actions-right" style="margin-top:24px;">
+      <button id="toys_play_btn" class="btn" style="min-width:auto;width:100%;font-size:18px;">Jogar</button>
+    </div>
+  `;
+  openModalInner(html);
+  
+  document.getElementById('toys_close_x').addEventListener('click', closeModal);
+  const container = document.getElementById('toys_selection_container');
+  
+  TOY_OPTIONS.forEach(toy => {
+    const lbl = document.createElement('label');
+    lbl.style = 'display:flex;align-items:center;gap:12px;cursor:pointer;font-size:16px;padding:8px 0;';
+    const chk = document.createElement('input');
+    chk.type = 'checkbox';
+    chk.value = toy.id;
+    chk.style = 'width:20px;height:20px;';
+    
+    if (state.selectedToys && state.selectedToys.includes(toy.id)) chk.checked = true;
+    
+    lbl.appendChild(chk);
+    lbl.appendChild(document.createTextNode(' ' + toy.name));
+    container.appendChild(lbl);
+  });
+  
+  document.getElementById('toys_play_btn').addEventListener('click', () => {
+    const selected = [];
+    container.querySelectorAll('input[type="checkbox"]:checked').forEach(c => selected.push(c.value));
+    state.selectedToys = selected;
+    saveState();
+    closeModal();
+    if (onConfirm) onConfirm();
+  });
 }
