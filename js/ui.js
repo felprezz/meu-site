@@ -518,6 +518,8 @@ export function openToysSelectionModal(onConfirm) {
   document.getElementById('toys_close_x').addEventListener('click', closeModal);
   const container = document.getElementById('toys_selection_container');
   
+  const checkboxes = [];
+
   TOY_OPTIONS.forEach(toy => {
     const lbl = document.createElement('label');
     lbl.style = 'display:flex;align-items:center;gap:12px;cursor:pointer;font-size:16px;padding:8px 0;';
@@ -531,11 +533,44 @@ export function openToysSelectionModal(onConfirm) {
     lbl.appendChild(chk);
     lbl.appendChild(document.createTextNode(' ' + toy.name));
     container.appendChild(lbl);
+    checkboxes.push(chk);
+  });
+
+  const lblNone = document.createElement('label');
+  lblNone.style = 'display:flex;align-items:center;gap:12px;cursor:pointer;font-size:16px;padding:8px 0;';
+  const chkNone = document.createElement('input');
+  chkNone.type = 'checkbox';
+  chkNone.value = 'nenhum';
+  chkNone.style = 'width:20px;height:20px;';
+  
+  if (!state.selectedToys || state.selectedToys.length === 0) {
+    chkNone.checked = true;
+  }
+  
+  lblNone.appendChild(chkNone);
+  lblNone.appendChild(document.createTextNode(' Nenhum'));
+  container.appendChild(lblNone);
+
+  checkboxes.forEach(chk => {
+    chk.addEventListener('change', () => {
+      if (chk.checked) chkNone.checked = false;
+      else if (checkboxes.every(c => !c.checked)) chkNone.checked = true;
+    });
+  });
+
+  chkNone.addEventListener('change', () => {
+    if (chkNone.checked) {
+      checkboxes.forEach(c => c.checked = false);
+    } else if (checkboxes.every(c => !c.checked)) {
+      chkNone.checked = true;
+    }
   });
   
   document.getElementById('toys_play_btn').addEventListener('click', () => {
     const selected = [];
-    container.querySelectorAll('input[type="checkbox"]:checked').forEach(c => selected.push(c.value));
+    container.querySelectorAll('input[type="checkbox"]:checked').forEach(c => {
+      if (c.value !== 'nenhum') selected.push(c.value);
+    });
     state.selectedToys = selected;
     saveState();
     closeModal();
