@@ -10,7 +10,8 @@ export const DEFAULT_CATEGORIES = [
 ];
 
 export const BUILTIN_CHALLENGES = [
-  { "text": "Faça uma garganta profunda na(o) {player}", "category": "Pesado", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 1 },
+  { "text": "Faça uma garganta profunda no {player}", "category": "Pesado", "actorGender": "F", "targetGender": "M", "allowSelf": false, "weight": 1 },
+  { "text": "Foda a boca da {player} com vontade", "category": "Pesado", "actorGender": "M", "targetGender": "F", "allowSelf": false, "weight": 1 },
   { "text": "Sente no rosto do(a) {player}", "category": "Pesado", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 1 },
   { "text": "Tire uma peça de roupa do(a) {player}", "category": "Preliminares", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 1 },
   { "text": "Tire uma peça de roupa", "category": "Preliminares", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 1 },
