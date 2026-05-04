@@ -12,7 +12,6 @@ export const DEFAULT_CATEGORIES = [
 export const BUILTIN_CHALLENGES = [
   { "text": "Faça uma garganta profunda no {player}", "category": "Pesado", "actorGender": "F", "targetGender": "M", "allowSelf": false, "weight": 1 },
   { "text": "Foda a boca da {player} com vontade", "category": "Pesado", "actorGender": "M", "targetGender": "F", "allowSelf": false, "weight": 1 },
-  { "text": "Sente no rosto do(a) {player}", "category": "Pesado", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 1 },
   { "text": "Tire uma peça de roupa do(a) {player}", "category": "Preliminares", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 1 },
   { "text": "Tire uma peça de roupa", "category": "Preliminares", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 1 },
   { "text": "Beijo sexy no(a) {player}", "category": "Aquecimento", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 1 },
@@ -68,4 +67,7 @@ export const BUILTIN_CHALLENGES = [
   { "text": "Escreva em detalhes no bloco de notas do seu celular como você transaria com a(o) {player} e entregue para ela(e). Sem filtro.", "category": "Preliminares", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2 },
   { "text": "Fique deitado(a), enquanto {player} se masturba bem próximo do seu rosto. Você só pode olhar, sem encostar", "category": "Masturbação", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2 },
   { "text": "Aperte o pescoço da {player} para beija-la", "category": "Aquecimento", "actorGender": "any", "targetGender": "M", "allowSelf": false, "weight": 2 },
+  { "text": "Cuspa dentro da boca do(a) {player}", "category": "Submissão", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2 },
+  { "text": "Vire a {player} de costas e dê tapas na bunda dela", "category": "Submissão", "actorGender": "any", "targetGender": "F", "allowSelf": false, "weight": 2 },
+  { "text": "Enforque e masturbe a(o) {player}", "category": "Submissão", "actorGender": "any", "targetGender": "any", "allowSelf": false, "weight": 2 },
 ];
